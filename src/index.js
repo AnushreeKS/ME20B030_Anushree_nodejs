@@ -1,6 +1,5 @@
 const express = require("express");
 const validator = require("email-validator");
-const verifier = require("email-verify");
 
 const app = express();
 require("./db");
@@ -24,14 +23,20 @@ app.post('/api/products', async (req, res) => {
        
     
     //console.log(req.body.title);
-    return res.send("Api working");
+    //return res.send("Api working");
     } catch (e) {
         return res.status(500).send(e);
     }
 });
 
-app.get('/api/products', (req,res) => {
-    return res.status(200).send({"title" : "SSchool"})
-})
+app.get('/api/products', async (req,res) => {
+    try{
+        const products = await Product.find();
+        return res.status(200).send(products);
+    } catch(e){
+        return res.status(500).send(e);
+    }
+    
+});
 
 app.listen(3000, ()=>{console.log("Listening")})
